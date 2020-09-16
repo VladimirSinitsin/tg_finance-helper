@@ -41,7 +41,7 @@ def preview_all_products(message):
 
 
 # Добавление покупки.
-@bot.message_handler(func=lambda m: True, content_types=["text"])
+@bot.message_handler(content_types=["text"])
 def echo_product(message):
     global products
     # Разбиваем строку, где 1 элемент - название товара, а последний - его стоимость.
