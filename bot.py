@@ -1,8 +1,12 @@
 import telebot
 
-bot = telebot.TeleBot("1348964593:AAEIbkuC4E7cra88p11xjtyy3FucW-scOj0")
+from bot_config import TOKEN
+
+
+bot = telebot.TeleBot(TOKEN)
 
 expenses = {}
+
 
 @bot.massage_handler(commands = ['start'])
 def send_welcom(massage):
