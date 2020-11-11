@@ -1,14 +1,6 @@
-from typing import NamedTuple, Optional
-
-from costs import add_cost
-import db
-
-
-class Product(NamedTuple):
-    codename: str
-    price: int
-    category: Optional[str]
-    in_db: Optional[bool]
+from .classes import Product
+from .db import insert, get_cursor
+from .costs import add_cost
 
 
 def product_exist(raw_message: str) -> Product:
@@ -18,12 +10,12 @@ def product_exist(raw_message: str) -> Product:
     :return: товар.
     """
     product = _parse_message(raw_message)
-    cursor = db.get_cursor()
+    cursor = get_cursor()
     # Записываем категорию у товара из БД с таким названием.
-    cursor.execute(f"SELECT category_codename"
+    cursor.execute(f"SELECT category_codename "
                    f"FROM Product"
-                   f"WHERE codename = '{product.codename}'")
-    row = cursor.fetchone()[0]
+                   f" WHERE codename = '{product.codename}'")
+    row = cursor.fetchone()
     # Если категория есть, то присваиваем её товару и записываем трату по нему в БД.
     if row:
         product.category = row[0]
@@ -39,12 +31,13 @@ def add_product(product: Product) -> Product:
     :param product: товар.
     :return: добавленный товар.
     """
-    db.insert("Product",
-              {"codename": product.codename,
-               "category_codename": product.category})
+    insert("Product",
+           {"codename": product.codename,
+            "category_codename": product.category})
     return add_cost(product)
 
 
 def _parse_message(raw_message: str) -> Product:
     # TODO: Надо реализовать парсер сообщений с товаром.
-    pass
+    text = raw_message.split()
+    return Product(codename=text[0], price=float(text[1]), category=None)

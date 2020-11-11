@@ -1,7 +1,9 @@
-from typing import NamedTuple, Optional, List
+from typing import List
 
-from products import Product, add_product
-import db
+from .classes import Product
+from .db import insert as db_insert
+from .db import fetchall as db_fetchall
+from .products import add_product
 
 
 def add_category(product: Product) -> Product:
@@ -10,7 +12,7 @@ def add_category(product: Product) -> Product:
     :param product: товар, у котого указана категория.
     :return: добавленный товар.
     """
-    db.insert("Category", {"category_codename": product.category})
+    db_insert("Category", {"codename": product.category})
     return add_product(product)
 
 
@@ -19,7 +21,7 @@ def all_categories() -> List[str]:
     Возвращает все категории.
     :return: список с названиями категорий.
     """
-    result_rows = db.fetchall("Category", ["category_codename"])
+    result_rows = db_fetchall("Category", ["category_codename"])
     result = []
     for row in result_rows:
         result.append(row['category_codename'])
