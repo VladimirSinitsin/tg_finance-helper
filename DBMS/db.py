@@ -5,7 +5,7 @@ import sqlite3
 
 
 # Подключение к БД.
-conn = sqlite3.connect(os.path.join("db", "finance.db"))
+conn = sqlite3.connect(os.path.join("finance.db"))
 cursor = conn.cursor()
 
 
@@ -26,14 +26,13 @@ def insert(table: str, column_values: Dict):
     conn.commit()
 
 
-def delete(table: str, row_id: int) -> None:
+def delete_cost(table: str, id: int) -> None:
     """
-    Метод реализующий DELETE для БД.
+    Метод реализующий DELETE для расхода по его id в БД.
     :param table: название таблицы.
-    :param row_id: id записи, которую нужно удалить.
+    :param id: id записи, которую нужно удалить.
     """
-    row_id = int(row_id)
-    cursor.execute(f"DELETE FROM {table} WHERE id={row_id}")
+    cursor.execute(f"DELETE FROM {table} WHERE id={id}")
     conn.commit()
 
 
@@ -64,7 +63,7 @@ def _init_db():
     """
     Создание таблиц в БД (выполняется скрипт 'createdb.sql').
     """
-    with open("createdb.sql", "r") as f:
+    with open("./DBMS/createdb.sql", "r") as f:
         sql = f.read()
     cursor.executescript(sql)
     conn.commit()

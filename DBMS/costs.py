@@ -1,9 +1,8 @@
-from typing import NamedTuple, Optional
 import datetime
 import pytz
 
-from products import Product
-import db
+from .db import insert as db_insert
+from .classes import Product
 
 
 TIME_ZONE = 'Europe/Moscow'
@@ -15,10 +14,10 @@ def add_cost(product: Product) -> Product:
     :param product: товар.
     :return: добавленный товар.
     """
-    db.insert("Cost",
-              {"price": product.price,
-               "created": _get_now_formatted(),
-               "product_codename": product.codename})
+    db_insert("Cost",
+           {"price": product.price,
+            "created": _get_now_formatted(),
+            "product_codename": product.codename})
     return product
 
 
