@@ -5,6 +5,7 @@ import telebot
 
 from bot_config import TOKEN
 
+from telebot import types
 
 # Инициализация бота.
 bot = telebot.TeleBot(TOKEN, parse_mode=None)
@@ -15,10 +16,16 @@ products = {}
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
+    # содание клавиатуры с кнопками
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    item1 = types.KeyboardButton("/start")
+    item2 = types.KeyboardButton("/help")
+    item3 = types.KeyboardButton("/all")
+    markup.add(item1, item2, item3)
     bot.reply_to(message, 'Привет! Я бот для ведения бюджета\n''' +
                           'Вводи свои покупки в виде: название - цена\n' +
                           'Например: бананы - 300\n\n'
-                          'Доступные команды:\n/start\n/help\n/all')
+                          'Доступные команды:\n/start\n/help\n/all', reply_markup=markup)
 
 
 @bot.message_handler(commands=['help'])
