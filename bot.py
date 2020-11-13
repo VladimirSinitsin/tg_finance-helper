@@ -50,6 +50,15 @@ def preview_all_products(message):
 # Добавление покупки.
 @bot.message_handler(content_types=["text"])
 def echo_product(message):
+    markup = types.InlineKeyboardMarkup(row_width=1)
+    item1 = types.InlineKeyboardButton('🍎Продукты🍎', callback_data='Продукты')
+    item2 = types.InlineKeyboardButton('👔Одежда👔', callback_data='Одежда')
+    item3 = types.InlineKeyboardButton('🧮Счета🧮', callback_data='Счета')
+    item4 = types.InlineKeyboardButton('🚘Автомобиль🚘', callback_data='Автомобиль')
+    item5 = types.InlineKeyboardButton('🏄Досуг🏄', callback_data='Досуг')
+    item6 = types.InlineKeyboardButton('❓Прочее❓', callback_data='Прочее')
+    markup.add(item1, item2, item3, item4, item5, item6)
+
     global products
     # Разбиваем строку, где 1 элемент - название товара, а последний - его стоимость.
     text = message.text.split()
@@ -61,6 +70,7 @@ def echo_product(message):
         value = products[name_of_product]
     else:
         products[name_of_product] = value
+        bot.reply_to(message, 'К какой категории добавить "' + message.text + '"?🤔', reply_markup=markup)
     bot.reply_to(message, 'Добавлен товар: {0}\nна сумму: {1}'.format(name_of_product, value))
 
 
