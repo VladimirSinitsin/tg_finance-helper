@@ -21,8 +21,8 @@ def all_categories() -> List[str]:
     Возвращает все категории.
     :return: список с названиями категорий.
     """
-    result_rows = db_fetchall("Category", ["category_codename"])
+    result_rows = db_fetchall("Category", ["codename"])
     result = []
     for row in result_rows:
-        result.append(row['category_codename'])
+        result.append(row['codename'])
     return result
