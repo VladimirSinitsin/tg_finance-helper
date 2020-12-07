@@ -1,7 +1,13 @@
 CREATE TABLE Budget(
+    codename TEXT PRIMARY KEY
+);
+
+CREATE TABLE Deposit(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    money INTEGER
+    money INTEGER,
+    created DATATIME,
+    depositor_name TEXT,
+    FOREIGN KEY(depositor_name) REFERENCES Budget(codename)
 );
 
 CREATE TABLE Category(
