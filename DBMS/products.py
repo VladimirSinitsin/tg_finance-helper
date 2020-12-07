@@ -13,8 +13,8 @@ def product_exist(raw_message: str) -> Product:
     cursor = get_cursor()
     # Записываем категорию у товара из БД с таким названием.
     cursor.execute(f"SELECT category_codename "
-                   f"FROM Product"
-                   f" WHERE codename = '{product.codename}'")
+                   f"FROM Product "
+                   f"WHERE codename = '{product.codename}'")
     row = cursor.fetchone()
     # Если категория есть, то присваиваем её товару и записываем трату по нему в БД.
     if row:
