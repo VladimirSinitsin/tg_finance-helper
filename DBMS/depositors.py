@@ -1,3 +1,4 @@
+import re
 from typing import List
 
 from .classes import Deposit
@@ -58,6 +59,8 @@ def _add_deposit(deposit: Deposit) -> None:
 
 
 def _parse_message(raw_message: str) -> Deposit:
-    # TODO: Надо реализовать парсер сообщений с доходом.
-    text = raw_message.split()
-    return Deposit(name=text[0], money=float(text[1]))
+    name, money = raw_message.split('-')
+    if name[-1] == " ":
+        name = name[:-1]
+    money = re.findall(r"[-+]?\d*\.\d+|\d+", money)[0]
+    return Deposit(name=name, money=float(money))

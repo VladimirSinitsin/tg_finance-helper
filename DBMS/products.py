@@ -1,3 +1,5 @@
+import re
+
 from .classes import Product
 from .db import insert, get_cursor
 from .costs import add_cost
@@ -38,6 +40,8 @@ def add_product(product: Product) -> Product:
 
 
 def _parse_message(raw_message: str) -> Product:
-    # TODO: Надо реализовать парсер сообщений с товаром.
-    text = raw_message.split()
-    return Product(codename=text[0], price=float(text[1]), category=None)
+    name, price = raw_message.split('-')
+    if name[-1] == " ":
+        name = name[:-1]
+    price = re.findall(r"[-+]?\d*\.\d+|\d+", price)[0]
+    return Product(codename=name, price=float(price), category=None)
