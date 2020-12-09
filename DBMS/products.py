@@ -40,8 +40,18 @@ def add_product(product: Product) -> Product:
 
 
 def _parse_message(raw_message: str) -> Product:
+    """
+    Обрабатывает сообщение в экземпляр Product.
+    Название и цена должны быть разделены тире.
+    :param raw_message: сообщение.
+    :return: продукт.
+    """
+    # Разбиваем на две части, и убираем пробел, если есть в конце названия.
     name, price = raw_message.split('-')
     if name[-1] == " ":
         name = name[:-1]
+    # Приводим к нормальному виду (первая буква - заглавная, остальные - строчные).
+    name = name.lower().capitalize()
+    # Находим число-цену.
     price = re.findall(r"[-+]?\d*\.\d+|\d+", price)[0]
     return Product(codename=name, price=float(price), category=None)

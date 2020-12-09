@@ -59,6 +59,10 @@ def get_cursor():
     return cursor
 
 
+def delete_db():
+    os.remove("finance.db")
+
+
 def _init_db():
     """
     Создание таблиц в БД (выполняется скрипт 'createdb.sql').
