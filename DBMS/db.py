@@ -49,6 +49,19 @@ def fetchall(table: str, columns: List[str]) -> List[Dict]:
     return result
 
 
+def all_categories_costs() -> str:
+    cursor.execute("SELECT Product.category_codename, SUM(t1.count) "
+                   "FROM (SELECT product_codename, SUM(price) AS count "
+                         "FROM Cost "
+                         "GROUP BY product_codename) AS t1 INNER JOIN Product ON t1.product_codename = Product.codename "
+                   "GROUP BY Product.category_codename")
+    rows = cursor.fetchall()
+    answer = ''
+    for row in rows:
+        answer += f"{row[0]} - {row[1]}\n"
+    return answer
+
+
 def delete_db():
     os.remove("finance.db")
 

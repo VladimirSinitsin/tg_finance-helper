@@ -20,6 +20,14 @@ product.category = 'Продукты'
 DBMS.add_category(product)
 
 
+#%% Ещё пример.
+raw_message = 'Бензин - 1000'
+product = DBMS.product_exist(raw_message)
+if not product.category:
+    product.category = 'Автомобиль'
+DBMS.add_category(product)
+
+
 #%% Если категория данного товара нам уже известа,
 # метод product_exist добавит новый расход по данному товару в БД,
 # и вернёт товар с его категорией (category='Продукты').
@@ -28,9 +36,23 @@ product = DBMS.product_exist(raw_message)
 
 print(product)
 
+
+#%% Если категория уже в БД, но продукт - нет.
+raw_message = 'Клубника - 200'
+product = DBMS.product_exist(raw_message)
+if not product.category:
+    product.category = 'Продукты'
+DBMS.add_product(product)
+
+
 #%% Вывод всех категорий при помощи метода all_categories.
 print('Все категории:')
 [print(category) for category in DBMS.all_categories()]
+
+
+#%% Вывод всех расходов по категориям.
+print(DBMS.db.all_categories_costs())
+
 
 ##############
 ### Доходы ###
