@@ -9,6 +9,10 @@ conn = sqlite3.connect(os.path.join("finance.db"))
 cursor = conn.cursor()
 
 
+def get_cursor():
+    return cursor
+
+
 def insert(table: str, column_values: Dict):
     """
     Метод реализующий INSERT для БД.
@@ -23,16 +27,6 @@ def insert(table: str, column_values: Dict):
         f"({columns}) "
         f"VALUES ({placeholders})",
         values)
-    conn.commit()
-
-
-def delete_cost(table: str, id: int) -> None:
-    """
-    Метод реализующий DELETE для расхода по его id в БД.
-    :param table: название таблицы.
-    :param id: id записи, которую нужно удалить.
-    """
-    cursor.execute(f"DELETE FROM {table} WHERE id={id}")
     conn.commit()
 
 
@@ -55,8 +49,47 @@ def fetchall(table: str, columns: List[str]) -> List[Dict]:
     return result
 
 
-def get_cursor():
-    return cursor
+def delete_db():
+    os.remove("finance.db")
+
+
+def delete_cost(table: str, id: int) -> None:
+    """
+    Метод реализующий DELETE для расхода по его id в БД.
+    :param table: название таблицы.
+    :param id: id записи, которую нужно удалить.
+    """
+    cursor.execute(f"DELETE FROM {table} WHERE id={id}")
+    conn.commit()
+
+
+def delete_costs() -> None:
+    cursor.execute(f"DROP TABLE Cost;")
+    cursor.execute("CREATE TABLE Cost("
+                   "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                   "price INTEGER,"
+                   "created DATATIME,"
+                   "product_codename TEXT,"
+                   "FOREIGN KEY(product_codename) REFERENCES Product(codename)"
+                   ");")
+    conn.commit()
+
+
+def delete_deposits() -> None:
+    cursor.execute(f"DROP TABLE Deposit;")
+    cursor.execute("CREATE TABLE Deposit("
+                   "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                   "money INTEGER,"
+                   "created DATATIME,"
+                   "depositor_name TEXT,"
+                   "FOREIGN KEY(depositor_name) REFERENCES Budget(codename)"
+                   ");")
+    conn.commit()
+
+
+def _delete_table(table: str) -> None:
+    cursor.execute(f"DROP TABLE {table}")
+    conn.commit()
 
 
 def _init_db():
