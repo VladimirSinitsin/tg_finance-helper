@@ -14,6 +14,3 @@ def add_cost(product: Product) -> Product:
                "created": get_now_formatted(),
                "product_codename": product.codename})
     return product
-
-
-

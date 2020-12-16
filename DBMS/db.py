@@ -1,5 +1,5 @@
 import os
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 import sqlite3
 
@@ -53,7 +53,7 @@ def all_categories_costs() -> str:
     cursor.execute("SELECT Product.category_codename, SUM(t1.count) "
                    "FROM (SELECT product_codename, SUM(price) AS count "
                          "FROM Cost "
-                         "GROUP BY product_codename) AS t1 INNER JOIN Product ON t1.product_codename = Product.codename "
+                         "GROUP BY product_codename) AS t1 INNER JOIN Product ON t1.product_codename=Product.codename "
                    "GROUP BY Product.category_codename")
     rows = cursor.fetchall()
     answer = ''
@@ -70,16 +70,6 @@ def delete_db():
     conn = sqlite3.connect(os.path.join("finance.db"))
     cursor = conn.cursor()
     _init_db()
-
-
-def delete_cost(table: str, id: int) -> None:
-    """
-    Метод реализующий DELETE для расхода по его id в БД.
-    :param table: название таблицы.
-    :param id: id записи, которую нужно удалить.
-    """
-    cursor.execute(f"DELETE FROM {table} WHERE id={id}")
-    conn.commit()
 
 
 def delete_costs() -> None:

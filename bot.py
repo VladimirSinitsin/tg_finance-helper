@@ -97,31 +97,32 @@ async def echo_product(message):
         product = DBMS.product_exist(raw_message)
     except Exception as e:
         await message.answer(f"Что-то пошло не так: {e}")
-
-    if product.category:
-        await message.answer(f"Товар {product.codename} на сумму {product.price} "
-                             f"добавлен в категорию {product.category}.")
     else:
-        # Клавиатура с выбором.
-        keyboard = InlineKeyboardMarkup(row_width=2)
-        deposit = InlineKeyboardButton("Доход", callback_data="Доход")
-        cost = InlineKeyboardButton("Расход", callback_data="Расход")
-        keyboard.add(deposit, cost)
+        if product.category:
+            await message.answer(f"Товар {product.codename} на сумму {product.price} "
+                                 f"добавлен в категорию {product.category}.")
+        else:
+            # Клавиатура с выбором.
+            keyboard = InlineKeyboardMarkup(row_width=2)
+            deposit = InlineKeyboardButton("Доход", callback_data="Доход")
+            cost = InlineKeyboardButton("Расход", callback_data="Расход")
+            keyboard.add(deposit, cost)
 
-        # Далее обработка ответа.
-        await message.answer('Это доход или расход', reply_markup=keyboard)
+            # Далее обработка ответа.
+            await message.answer('Это доход или расход', reply_markup=keyboard)
 
 
 @dp.callback_query_handler(lambda c: c.data == 'Доход')
 async def process_callback_button1(callback_query: types.CallbackQuery):
     global raw_message
-    deposit = DBMS.Deposit("", 0)
+
     try:
         deposit = DBMS.add_deposit(raw_message)
     except Exception as e:
         await bot.send_message(callback_query.message.chat.id, f"Что-то пошло не так: {e}")
-    await bot.send_message(callback_query.message.chat.id, f"Депозит от {deposit.name} "
-                                                           f"на сумму {deposit.money} был добавлен.")
+    else:
+        await bot.send_message(callback_query.message.chat.id, f"Депозит от {deposit.name} "
+                                                               f"на сумму {deposit.money} был добавлен.")
 
 
 @dp.callback_query_handler(lambda c: c.data == 'Расход')
