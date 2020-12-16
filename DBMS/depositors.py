@@ -8,7 +8,7 @@ from .db import fetchall as db_fetchall
 from .db import insert as db_insert
 
 
-def add_deposit(raw_message: str) -> None:
+def add_deposit(raw_message: str) -> Deposit:
     """
     Добавляет доход в БД по сообщению.
     :param raw_message: сообщение.
@@ -25,6 +25,7 @@ def add_deposit(raw_message: str) -> None:
         _add_depositor(deposit)
     # Добавляем доход в БД.
     _add_deposit(deposit)
+    return deposit
 
 
 def all_depositors() -> List[str]:
