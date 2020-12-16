@@ -20,7 +20,7 @@ from bot_config import TOKEN
 bot = Bot(token=TOKEN)
 dp =  Dispatcher(bot)
 # Словарь для хранения продуктов и их стоимостей.
-products = {}
+product = DBMS.Product("sss",1,None)
 
 
 @dp.message_handler(commands=['start'])
@@ -43,40 +43,26 @@ async def send_help(message):
 
 
 # ВЫвод всех покупок и сумм через /all.
-@dp.message_handler(commands=['all'])
-async def preview_all_products(message):
-    global products
-    if products:
-        result = ''
-        # Записываем все товары и их суммы в строку для вывода.
-        for key, value in products.items():
-            result += '{0}: {1}\n'.format(key, value)
-        await message.answer('Всё покупки:\n\n' + result)
-    else:
-        await message.answer('Покупок не было')
+# @dp.message_handler(commands=['all'])
+# async def preview_all_products(message):
+#     for category in DBMS.all_categories():
+
 
 
 # Добавление покупки.
 @dp.message_handler(content_types=["text"])
 async def echo_product(message):
+    global product
     # клавиатура связанная с бд
-    category_callback = CallbackData('Category', 'Name_category')
     markup = InlineKeyboardMarkup(row_width=1)
     for items in DBMS.all_categories():
-        item = InlineKeyboardButton(items, callback_data=f"Category:{items}")
+        item = InlineKeyboardButton(items, callback_data=items)
         markup.add(item)
 
-    item = InlineKeyboardButton('Новая категория', callback_data="Category:new")
+    item = InlineKeyboardButton('Новая категория', callback_data="new")
     markup.add(item)
-    # item1 = types.InlineKeyboardButton('🍎Продукты🍎', callback_data='Продукты')
-    # item2 = types.InlineKeyboardButton('👔Одежда👔', callback_data='Одежда')
-    # item3 = types.InlineKeyboardButton('🧮Счета🧮', callback_data='Счета')
-    # item4 = types.InlineKeyboardButton('🚘Автомобиль🚘', callback_data='Автомобиль')
-    # item5 = types.InlineKeyboardButton('🏄Досуг🏄', callback_data='Досуг')
-    # item6 = types.InlineKeyboardButton('❓Прочее❓', callback_data='Прочее')
-    # markup.add(item1, item2, item3, item4, item5, item6)
 
-    global products
+
 
 
     # Если уже был, то просто суммируем, иначе создаем новый товар в словаре.
@@ -89,19 +75,23 @@ async def echo_product(message):
     # bot.reply_to(message, 'Добавлен товар: {0}\nна сумму: {1}'.format(name_of_product, value))
 
     # связь бота с базой данных
-    # product = DBMS.product_exist(message.text)
-    # if product.category == None:
-    await message.reply(message, 'Выберите категорию', reply_markup=markup)
+    product = DBMS.product_exist(message.text)
+    if product.category == None:
+        await message.answer('Выберите категорию', reply_markup=markup)
 
 
-# # работа с категориями
-# @dp.callback_query_handler()
-# async def answer(call, message):
-#     if call.data == 'new':
-#         await message.reply(message, 'Введите категорию')
-#     else:
-#         product.category = call.data
-#
+# работа с категориями
+@dp.callback_query_handler(lambda c: c.data in DBMS.all_categories())
+async def process_callback_button1(callback_query: types.CallbackQuery):
+    await bot.send_message(callback_query.message.chat.id, callback_query.data)
+    global product
+    product.category = callback_query.data
+    DBMS.add_product(product)
+
+
+@dp.callback_query_handler(lambda c: c.data =='new')
+async def process_callback_button1(callback_query: types.CallbackQuery):
+    await bot.send_message(callback_query.message.chat.id, callback_query.data)
 #
 # # метод позволяющий ответить боту
 # async def next_step(message):
