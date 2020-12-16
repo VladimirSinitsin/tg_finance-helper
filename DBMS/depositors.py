@@ -66,12 +66,16 @@ def _parse_message(raw_message: str) -> Deposit:
     :param raw_message: сообщение.
     :return: вклад.
     """
-    # Разбиваем сообщение на две части, и убираем пробел, если есть в конце имени.
-    name, money = raw_message.split('-')
-    if name[-1] == " ":
-        name = name[:-1]
-    # Приводим к нормальному виду (первая буква - заглавная, остальные - строчные).
-    name = name.lower().capitalize()
-    # Находим число-вклад.
-    money = re.findall(r"[-+]?\d*\.\d+|\d+", money)[0]
+    try:
+        # Разбиваем сообщение на две части, и убираем пробел, если есть в конце имени.
+        name, money = raw_message.split('-')
+        if name[-1] == " ":
+            name = name[:-1]
+        # Приводим к нормальному виду (первая буква - заглавная, остальные - строчные).
+        name = name.lower().capitalize()
+        # Находим число-вклад.
+        money = re.findall(r"[-+]?\d*\.\d+|\d+", money)[0]
+    except Exception as e:
+        print(e)
+        raise
     return Deposit(name=name, money=float(money))

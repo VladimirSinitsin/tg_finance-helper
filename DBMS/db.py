@@ -63,8 +63,13 @@ def all_categories_costs() -> str:
 
 
 def delete_db():
+    global conn
+    global cursor
+
     os.remove("finance.db")
-    check_db_exists()
+    conn = sqlite3.connect(os.path.join("finance.db"))
+    cursor = conn.cursor()
+    _init_db()
 
 
 def delete_cost(table: str, id: int) -> None:
