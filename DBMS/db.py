@@ -64,6 +64,7 @@ def all_categories_costs() -> str:
 
 def delete_db():
     os.remove("finance.db")
+    check_db_exists()
 
 
 def delete_cost(table: str, id: int) -> None:
