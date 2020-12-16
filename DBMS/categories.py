@@ -12,6 +12,7 @@ def add_category(product: Product) -> Product:
     :param product: товар, у котого указана категория.
     :return: добавленный товар.
     """
+    product.category = product.category.lower().capitalize()
     db_insert("Category", {"codename": product.category})
     return add_product(product)
 
