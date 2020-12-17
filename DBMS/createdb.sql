@@ -4,7 +4,7 @@ CREATE TABLE Budget(
 
 CREATE TABLE Deposit(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    money INTEGER,
+    money DECIMAL,
     created DATATIME,
     depositor_name TEXT,
     FOREIGN KEY(depositor_name) REFERENCES Budget(codename)
@@ -22,7 +22,7 @@ CREATE TABLE Product(
 
 CREATE TABLE Cost(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    price INTEGER,
+    price DECIMAL,
     created DATATIME,
     product_codename TEXT,
     FOREIGN KEY(product_codename) REFERENCES Product(codename)
