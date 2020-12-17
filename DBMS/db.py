@@ -62,6 +62,17 @@ def all_categories_costs() -> str:
     return answer
 
 
+def all_deposits() -> str:
+    cursor.execute("SELECT depositor_name, SUM(money) "
+                   "FROM Deposit "
+                   "GROUP BY depositor_name ")
+    rows = cursor.fetchall()
+    answer = ''
+    for row in rows:
+        answer += f"{row[0]} - {row[1]}\n"
+    return answer
+
+
 def delete_db():
     global conn
     global cursor

@@ -33,9 +33,10 @@ async def send_welcome(message):
     # содание клавиатуры с кнопками
     markup = ReplyKeyboardMarkup(resize_keyboard=True)
     item1 = KeyboardButton("/start")
-    item2 = KeyboardButton("/help")
-    item3 = KeyboardButton("/all")
-    markup.add(item1, item2, item3)
+    item2 = KeyboardButton("/all_costs")
+    item3 = KeyboardButton("/all_deposits")
+    item4 = KeyboardButton("/help")
+    markup.add(item1, item2, item3, item4)
     await message.answer('Привет! Я бот для ведения бюджета\n'
                          'Вводи свои покупки в виде: название - цена\n'
                          'Например: бананы - 300\n\n', reply_markup=markup)
@@ -44,20 +45,29 @@ async def send_welcome(message):
 @dp.message_handler(commands=['help'])
 async def send_help(message):
     await message.answer('Если тебе нужна помощь, то обратись к разработчикам.\n'
-                         'Ниже приведён список команд для очистки: '
+                         'Ниже приведён список команд для очистки:\n'
                          '/delete_costs - удалить все расходы\n'
                          '/delete_deposits - удалить все доходы\n'
                          '/delete_costs_deposits - удалить все доходы и расходы\n'
                          '/delete_db - очистить всю базу данных')
 
 
-@dp.message_handler(commands=['all'])
+@dp.message_handler(commands=['all_costs'])
 async def send_help(message):
     answer = DBMS.db.all_categories_costs()
     if answer:
         await message.answer(answer)
     else:
         await message.answer('Расходов не было.')
+
+
+@dp.message_handler(commands=['all_deposits'])
+async def send_help(message):
+    answer = DBMS.db.all_deposits()
+    if answer:
+        await message.answer(answer)
+    else:
+        await message.answer('Доходов не было.')
 
 
 @dp.message_handler(commands=['delete_db'])
@@ -96,7 +106,7 @@ async def echo_product(message):
     try:
         product = DBMS.product_exist(raw_message)
     except Exception as e:
-        await message.answer(f"Что-то пошло не так: {e}")
+        await message.answer(f"Что-то пошло не так... Вводите доходы/расходы в виде НАЗВАНИЕ - СТОИМОСТЬ.")
     else:
         if product.category:
             await message.answer(f"Товар {product.codename} на сумму {product.price} "
