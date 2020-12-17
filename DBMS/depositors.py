@@ -76,6 +76,5 @@ def _parse_message(raw_message: str) -> Deposit:
         # Находим число-вклад.
         money = re.findall(r"[-+]?\d*\.\d+|\d+", money)[0]
     except Exception as e:
-        print(e)
-        raise
+        raise e
     return Deposit(name=name, money=float(money))

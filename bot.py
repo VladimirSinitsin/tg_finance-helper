@@ -106,6 +106,7 @@ async def echo_product(message):
     try:
         product = DBMS.product_exist(raw_message)
     except Exception as e:
+        print("Возникла ошибка: ", e)
         await message.answer(f"Что-то пошло не так... Вводите доходы/расходы в виде НАЗВАНИЕ - СТОИМОСТЬ.")
     else:
         if product.category:

@@ -56,6 +56,5 @@ def _parse_message(raw_message: str) -> Product:
         # Находим число-цену.
         price = re.findall(r"[-+]?\d*\.\d+|\d+", price)[0]
     except Exception as e:
-        print(e)
-        raise
+        raise e
     return Product(codename=name, price=float(price), category=None)
